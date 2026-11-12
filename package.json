@@ -1,0 +1,14 @@
+{
+  "name": "notch-desktop-widget",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Widget desktop bergaya Dynamic Island untuk Windows",
+  "scripts": {
+    "tauri": "tauri",
+    "build:frontend": "node scripts/build-frontend.js",
+    "build": "npm run build:frontend && tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Kapabilitas dasar untuk jendela utama Notch",
+  "windows": ["main", "settings"],
+  "permissions": ["core:default"]
+}

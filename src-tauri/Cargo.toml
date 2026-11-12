@@ -1,0 +1,20 @@
+[package]
+name = "notch-desktop-widget"
+version = "1.0.0"
+description = "Widget desktop bergaya Dynamic Island untuk Windows"
+authors = ["Notch"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-autostart = "2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+  "Win32_Foundation",
+  "Win32_UI_Shell",
+  "Win32_UI_WindowsAndMessaging"
+] }

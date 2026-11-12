@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan Notch</title>
+  <style>
+    :root {
+      font-family: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      color-scheme: dark;
+      --panel: #151518;
+      --text: #f7f7f8;
+      --muted: #a3a3aa;
+      --line: rgba(255,255,255,.13);
+      --soft: rgba(255,255,255,.07);
+      --accent: #c8a9ff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body { min-height: 100vh; padding: 22px; overflow-y: auto; color: var(--text); background: var(--panel); }
+    body[data-theme="light"] {
+      color-scheme: light;
+      --panel: #f5f5f7;
+      --text: #17171a;
+      --muted: #696970;
+      --line: rgba(20,20,24,.13);
+      --soft: rgba(20,20,24,.05);
+      --accent: #6941c6;
+    }
+    body[data-theme="dark"] {
+      color-scheme: dark;
+      --panel: #0d0d0f;
+      --text: #f7f7f8;
+      --muted: #a3a3aa;
+      --line: rgba(255,255,255,.13);
+      --soft: rgba(255,255,255,.07);
+      --accent: #c8a9ff;
+    }
+    body[data-theme="glass"] {
+      color-scheme: dark;
+      --panel: #1c1c20;
+      --text: #fff;
+      --muted: #c0c0c7;
+      --line: rgba(255,255,255,.24);
+      --soft: rgba(255,255,255,.09);
+      --accent: #d3b9ff;
+    }
+
+    h1 { margin: 0; font-size: 21px; letter-spacing: -.03em; }
+    .subtitle { margin: 6px 0 20px; color: var(--muted); font-size: 12px; }
+    .group { margin-top: 18px; }
+    .group h2 { margin: 0 0 9px; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .options.themes { grid-template-columns: repeat(3, 1fr); }
+    .size-setting { margin-top: 11px; }
+    .size-setting label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 5px; font-size: 11px; }
+    .size-setting output { color: var(--muted); font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; height: 5px; accent-color: var(--accent); cursor: pointer; }
+    button {
+      min-height: 40px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: var(--soft);
+      cursor: pointer;
+      font: inherit;
+      font-size: 11px;
+      transition: transform 120ms ease;
+    }
+    button:hover, button.active {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      background: color-mix(in srgb, var(--accent) 18%, var(--soft));
+    }
+    button:active { transform: scale(.98); }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .setting-row {
+      min-height: 58px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--soft);
+    }
+    .setting-copy strong { display: block; font-size: 12px; }
+    .setting-copy small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .switch { position: relative; width: 42px; height: 24px; flex: 0 0 42px; }
+    .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .switch-track { position: absolute; inset: 0; border-radius: 99px; background: #666; cursor: pointer; transition: background-color 140ms ease; }
+    .switch-track::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 140ms ease;
+    }
+    .switch input:checked + .switch-track { background: var(--accent); }
+    .switch input:checked + .switch-track::after { transform: translateX(18px); }
+    .switch input:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+    #status { min-height: 16px; margin: 12px 0 0; color: var(--muted); font-size: 10px; }
+  </style>
+</head>
+<body data-theme="dark">
+  <h1>Pengaturan Notch</h1>
+  <p class="subtitle">Kustomisasi widget disimpan otomatis di perangkat ini.</p>
+
+  <section class="group">
+    <h2>Posisi widget</h2>
+    <div class="options">
+      <button type="button" data-position="top">Top · Atas</button>
+      <button type="button" data-position="bottom">Bottom · Bawah</button>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Bentuk widget</h2>
+    <div class="options">
+      <button type="button" data-layout="island">Dynamic Island</button>
+      <button type="button" data-layout="notch">Notch</button>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Tema warna</h2>
+    <div class="options themes">
+      <button type="button" data-theme-choice="light">Light</button>
+      <button type="button" data-theme-choice="dark">Dark</button>
+      <button type="button" data-theme-choice="glass">Glass</button>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Ukuran widget</h2>
+    <div class="size-setting">
+      <label for="collapsedWidth">Collapsed · lebar <output id="collapsedWidthValue"></output></label>
+      <input id="collapsedWidth" type="range" min="160" max="640" step="10">
+    </div>
+    <div class="size-setting">
+      <label for="collapsedHeight">Collapsed · tinggi <output id="collapsedHeightValue"></output></label>
+      <input id="collapsedHeight" type="range" min="42" max="110" step="2">
+    </div>
+    <div class="size-setting">
+      <label for="expandedWidth">Expanded · lebar <output id="expandedWidthValue"></output></label>
+      <input id="expandedWidth" type="range" min="320" max="900" step="10">
+    </div>
+    <div class="size-setting">
+      <label for="expandedHeight">Expanded · tinggi <output id="expandedHeightValue"></output></label>
+      <input id="expandedHeight" type="range" min="360" max="900" step="10">
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Tampilan depan</h2>
+    <div class="setting-row">
+      <span class="setting-copy">
+        <strong>Lirik singkat saat musik diputar</strong>
+        <small>Ganti jam di widget kecil dengan lirik aktif.</small>
+      </span>
+      <label class="switch" aria-label="Tampilkan lirik singkat">
+        <input id="collapsedLyricsSwitch" type="checkbox">
+        <span class="switch-track"></span>
+      </label>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Otomatisasi</h2>
+    <div class="setting-row">
+      <span class="setting-copy">
+        <strong>Jalankan saat Windows dimulai</strong>
+        <small>Widget otomatis aktif setelah Anda masuk ke Windows.</small>
+      </span>
+      <label class="switch" aria-label="Auto-Start Windows">
+        <input id="autostartSwitch" type="checkbox">
+        <span class="switch-track"></span>
+      </label>
+    </div>
+  </section>
+  <p id="status" role="status" aria-live="polite"></p>
+
+  <script>
+    (() => {
+      "use strict";
+      const $ = (selector) => document.querySelector(selector);
+      const status = $("#status");
+      const invoke = async (command, args) => {
+        const api = window.__TAURI__ && window.__TAURI__.core;
+        if (!api || typeof api.invoke !== "function") return null;
+        try {
+          return await api.invoke(command, args || {});
+        } catch (error) {
+          console.error("Perintah pengaturan gagal:", command, error);
+          status.textContent = "Pengaturan gagal diterapkan. Silakan coba lagi.";
+          return null;
+        }
+      };
+
+      const read = (key, fallback) => {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch (error) {
+          console.warn("Penyimpanan lokal tidak tersedia:", error);
+          return fallback;
+        }
+      };
+
+      const write = (key, value) => {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (error) {
+          console.error("Preferensi tidak dapat disimpan:", error);
+          status.textContent = "Preferensi tidak dapat disimpan di perangkat ini.";
+          return false;
+        }
+      };
+
+      const defaultSizes = {
+        collapsedWidth: 230,
+        collapsedHeight: 54,
+        expandedWidth: 440,
+        expandedHeight: 650
+      };
+
+      const readSizes = () => {
+        try {
+          return { ...defaultSizes, ...JSON.parse(read("notch-sizes", "{}")) };
+        } catch (error) {
+          console.warn("Pengaturan ukuran tidak dapat dibaca:", error);
+          return { ...defaultSizes };
+        }
+      };
+
+      const sizeFields = Object.keys(defaultSizes);
+      let sizeUpdateTimer = 0;
+      const collectSizes = () => {
+        const sizes = {};
+        sizeFields.forEach((key) => {
+          const input = $(`#${key}`);
+          const output = $(`#${key}Value`);
+          sizes[key] = Number(input.value);
+          output.textContent = `${input.value} px`;
+        });
+        return sizes;
+      };
+
+      const applySizeInputs = () => {
+        const sizes = readSizes();
+        sizeFields.forEach((key) => {
+          $(`#${key}`).value = String(sizes[key]);
+          $(`#${key}Value`).textContent = `${sizes[key]} px`;
+        });
+      };
+
+      const saveSizes = () => {
+        const sizes = collectSizes();
+        if (!write("notch-sizes", JSON.stringify(sizes))) return;
+        window.clearTimeout(sizeUpdateTimer);
+        sizeUpdateTimer = window.setTimeout(async () => {
+          const result = await invoke("set_widget_dimensions", {
+            ...sizes,
+            position: read("notch-position", "top"),
+            appbarEnabled: read("notch-appbar", "true") === "true",
+            expanded: read("notch-pinned", "false") === "true"
+          });
+          if (result === null) status.textContent = "Ukuran widget tersimpan, tetapi ukuran jendela gagal diperbarui.";
+          else status.textContent = "Ukuran widget diterapkan.";
+        }, 120);
+      };
+
+      const updateButtons = () => {
+        document.querySelectorAll("[data-position]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.position === read("notch-position", "top"));
+        });
+        document.querySelectorAll("[data-layout]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.layout === read("notch-layout", "island"));
+        });
+        document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.themeChoice === read("notch-theme", "dark"));
+        });
+        document.body.dataset.theme = read("notch-theme", "dark");
+      };
+
+      document.querySelectorAll("[data-position]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const position = button.dataset.position;
+          const sizes = readSizes();
+          const result = await invoke("set_widget_position", {
+            position,
+            appbarEnabled: read("notch-appbar", "true") === "true",
+            expanded: read("notch-pinned", "false") === "true",
+            ...sizes
+          });
+          if (result === null) return;
+          if (write("notch-position", position)) {
+            updateButtons();
+            status.textContent = `Posisi widget diubah ke ${position === "top" ? "atas" : "bawah"}.`;
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-layout]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (write("notch-layout", button.dataset.layout)) {
+            updateButtons();
+            status.textContent = "Bentuk widget diperbarui.";
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (write("notch-theme", button.dataset.themeChoice)) {
+            updateButtons();
+            status.textContent = "Tema warna diperbarui.";
+          }
+        });
+      });
+
+      const autostartSwitch = $("#autostartSwitch");
+      const collapsedLyricsSwitch = $("#collapsedLyricsSwitch");
+      collapsedLyricsSwitch.checked = read("notch-collapsed-lyrics", "true") === "true";
+      collapsedLyricsSwitch.addEventListener("change", () => {
+        write("notch-collapsed-lyrics", String(collapsedLyricsSwitch.checked));
+      });
+
+      sizeFields.forEach((key) => {
+        $(`#${key}`).addEventListener("input", saveSizes);
+      });
+      applySizeInputs();
+
+      const syncAutostart = async () => {
+        const enabled = await invoke("get_autostart");
+        if (enabled === null) return;
+        autostartSwitch.checked = enabled;
+        const saved = read("notch-autostart", null);
+        if (saved !== null && saved !== String(enabled)) write("notch-autostart", String(enabled));
+      };
+      syncAutostart();
+
+      autostartSwitch.addEventListener("change", async () => {
+        const enabled = autostartSwitch.checked;
+        const result = await invoke("set_autostart", { enabled });
+        if (result === null) {
+          autostartSwitch.checked = !enabled;
+          return;
+        }
+        if (write("notch-autostart", String(result))) {
+          status.textContent = result ? "Auto-Start diaktifkan." : "Auto-Start dinonaktifkan.";
+        } else {
+          await invoke("set_autostart", { enabled: !result });
+          autostartSwitch.checked = !result;
+        }
+      });
+
+      window.addEventListener("storage", (event) => {
+        if (event.key === "notch-theme" || event.key === "notch-layout" || event.key === "notch-position") {
+          updateButtons();
+        } else if (event.key === "notch-sizes") {
+          applySizeInputs();
+        } else if (event.key === "notch-autostart" && event.newValue !== null) {
+          autostartSwitch.checked = event.newValue === "true";
+        }
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) syncAutostart();
+      });
+      window.addEventListener("focus", syncAutostart);
+      updateButtons();
+    })();
+  </script>
+</body>
+</html>
